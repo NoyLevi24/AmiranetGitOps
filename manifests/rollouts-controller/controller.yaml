@@ -16567,6 +16567,7 @@ rules:
   - watch
   - get
   - update
+  - list
 - apiGroups:
   - apisix.apache.org
   resources:
