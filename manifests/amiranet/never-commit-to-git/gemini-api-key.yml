@@ -3,5 +3,6 @@ kind: Secret
 type: Opaque
 metadata:
   name: gemini-api-key
+  namespace: amiranet
 data:
   GEMINI_API_KEY: QUl6YVN5Q2JpaXoxWThvbzlQMUlkSGlZT3hyMWNoTjkzQkhYN1RBCg==
