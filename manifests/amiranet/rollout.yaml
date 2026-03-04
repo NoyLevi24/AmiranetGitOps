@@ -38,6 +38,9 @@ spec:
     canary:
       canaryService: amiranet-service-canary
       stableService: amiranet-service-stable
+      trafficRouting:
+        traefik:
+          weightedTraefikServiceName: traefik-service 
       steps:
       - setWeight: 30
       - pause: {}
