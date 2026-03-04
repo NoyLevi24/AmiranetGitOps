@@ -12,5 +12,5 @@ spec:
     kind: Rule
     services:
     - name: traefik-service
-      namespace: default
+      namespace: amiranet
       kind: TraefikService
