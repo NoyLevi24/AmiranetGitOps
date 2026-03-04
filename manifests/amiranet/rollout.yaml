@@ -1,0 +1,50 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: amiranet-rollout
+spec:
+  revisionHistoryLimit: 1
+  replicas: 2
+  selector:
+    matchLabels:
+      app: amiranet-app
+  template:
+    metadata:
+      labels:
+        app: amiranet-app
+    spec:
+      containers:
+      - name: amiranet
+        image: docker.io/noylevi/amiranet:v1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: gemini-api-key # שם ה-Secret ב-K8s
+              key: GEMINI_API_KEY    # המפתח הספציפי בתוך ה-Secret
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 5000
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 5000 
+  strategy:
+    canary:
+      canaryService: amiranet-service-canary
+      stableService: amiranet-service-stable
+      trafficRouting:
+        traefik:
+          weightedTraefikServiceName: traefik-service 
+      steps:
+      - setWeight: 30
+      - pause: {}
+      - setWeight: 60
+      - pause: {}
+      - setWeight: 100
+      - pause: {}     

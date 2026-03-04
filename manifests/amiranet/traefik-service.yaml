@@ -1,0 +1,11 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: TraefikService
+metadata:
+  name: traefik-service
+spec:
+  weighted:
+    services:
+      - name: amiranet-service-stable
+        port: 80
+      - name: amiranet-service-canary 
+        port: 80

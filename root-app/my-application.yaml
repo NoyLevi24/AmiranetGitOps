@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-application
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # Source of the application manifests
+  source:
+    repoURL: https://github.com/NoyLevi24/AmiranetGitOps.git
+    targetRevision: HEAD
+    path: ./my-app-list
+   
+    # directory
+    directory:
+      recurse: false
+  # Destination cluster and namespace to deploy the application
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  # Sync policy
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+      allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        maxDuration: 3m0s
+        factor: 2
+    syncOptions:
+      - CreateNamespace=true
+  
