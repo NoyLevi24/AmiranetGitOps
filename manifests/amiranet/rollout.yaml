@@ -28,11 +28,11 @@ spec:
               key: GEMINI_API_KEY    # המפתח הספציפי בתוך ה-Secret
         livenessProbe:
           httpGet:
-            path: /health/live
+            path: /
             port: 5000
         readinessProbe:
           httpGet:
-            path: /health/ready
+            path: /
             port: 5000 
   strategy:
     canary:
