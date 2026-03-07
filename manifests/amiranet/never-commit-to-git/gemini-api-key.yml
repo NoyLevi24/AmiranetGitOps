@@ -5,4 +5,4 @@ metadata:
   name: gemini-api-key
   namespace: amiranet
 data:
-  GEMINI_API_KEY: QUl6YVN5Q2JpaXoxWThvbzlQMUlkSGlZT3hyMWNoTjkzQkhYN1RBCg==
+  GEMINI_API_KEY: QUl6YVN5Q2JpaXoxWThvbzlQMUlkSGlZT3hyMWNoTjkzQkhYN1RB
