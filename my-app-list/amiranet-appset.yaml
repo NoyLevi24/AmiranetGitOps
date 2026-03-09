@@ -29,11 +29,11 @@ spec:
           path: ./manifests/amiranet-appset/my-chart
           helm:
             valueFiles:
-            - $values/amiranet-appset/my-values/common-values.yaml          
-            - $values/amiranet-appset/my-values/app-version/{{.version}}-values.yaml               
-            - $values/amiranet-appset/my-values/env-type/{{.type}}-values.yaml  
-            - $values/amiranet-appset/my-values/regions/{{.region}}-values.yaml                
-            - $values/amiranet-appset/my-values/envs/{{.env}}-values.yaml
+            - $values/manifests/amiranet-appset/my-values/common-values.yaml          
+            - $values/manifests/amiranet-appset/my-values/app-version/{{.version}}-values.yaml               
+            - $values/manifests/amiranet-appset/my-values/env-type/{{.type}}-values.yaml  
+            - $values/manifests/amiranet-appset/my-values/regions/{{.region}}-values.yaml                
+            - $values/manifests/amiranet-appset/my-values/envs/{{.env}}-values.yaml
         - repoURL: https://github.com/NoyLevi24/AmiranetGitOps.git
           targetRevision: HEAD
           ref: values
