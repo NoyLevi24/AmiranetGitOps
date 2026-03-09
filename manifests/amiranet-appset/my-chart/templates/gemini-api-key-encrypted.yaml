@@ -1,16 +1,12 @@
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  creationTimestamp: null
-  name: gemini-api-key
-  namespace: {{ .Release.Namespace }}
-spec:
-  encryptedData:
-    GEMINI_API_KEY: AgBI6T3W+yO67ZkzHag7zQkfl8kfp5B3cRpu1lb2IVIHgrV6m0Vyw8BHT+dXdInHvZ0l4Wh7tUK1EMmWND5XaidMv7HUxaml9Mtro8m31D/y3wGToPSfJh5reRpQDsqKYxMw8k4+lwAqTazRSqjeFlNt2bp71P0uA7pR3JBjC2j2M2hHoOQ1gPwUXqxzyW42bMHSMWnR/S+rfVtX8Xm7r1Ct7goKyswpqiU6nrzEHCCbgJvHUi7D6FNv0cCbrASReW6veebcn2/FmQYKw1uAzmHyMOnoshPJxSWWjJY13D+5fiwhQTu0+2IQqRXCG7iJEhIeR3O/h2A8tHMIe9Virl4Ex9pvoK0beEwsVqnqBxOLx8GyEYGSQ8ZYI4DbkAizRDeA45ZUsqHoKu70E/Kqd3Dvphq6EyXeNJcq2aaLQoH4Fj9ilOkyPxKCrnRYAjUwfJDpF5J0mpdzbtJPg0y0pjgoBraZ8pTYej+OTSangFkK3yfkVwF1gGaa9T6lCTXZTacWZCHX1it3gMbZuvM6+CBHllVZKM4s5Pgzlnnrunahtl/iWK94ID2b/K8/uLFRfSSfgTEuCL2U1y/MPPifleTtHA8LOqWF6DvQEDuNe/rPZgkZ+yXKa87MLQohsIBnVi24nr3ZobqhAef2wIyrppbRw0JQq8KS1jD/EwWHyTWAkpzrd7wG3aA0/C7WuBXPhU/KeRM6HfMkHW7oLYzEM2LqG5lwLntoiXAgvmfjy8oOx7whwjGvrS4=
-  template:
-    metadata:
-      creationTimestamp: null
-      name: gemini-api-key
-      namespace: {{ .Release.Namespace }}
-    type: Opaque
+{{- if eq .Release.Namespace "qa" }}
+{{- .Files.Get "keys/gemini-api-key-qa.yaml" }}
+{{- end }}
+{{- if eq .Release.Namespace "staging" }}
+{{- .Files.Get "keys/gemini-api-key-staging.yaml" }}
+{{- end }}
+{{- if eq .Release.Namespace "prod-us" }}
+{{- .Files.Get "keys/gemini-api-key-prod-us.yaml" }}
+{{- end }}
+{{- if eq .Release.Namespace "prod-eu" }}
+{{- .Files.Get "keys/gemini-api-key-prod-eu.yaml" }}
+{{- end }}

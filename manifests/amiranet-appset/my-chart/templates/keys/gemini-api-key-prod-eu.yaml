@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: gemini-api-key
+  namespace: prod-eu
+spec:
+  encryptedData:
+    GEMINI_API_KEY: AgBTwSubZ6imx5B0HHUldQiGIwLx7+6HISHpAbTDaWnegJ02b0qlKrWoGbxaPR9GdNiI+5JPq+hpNPwvd1HJkWl8PD1LPWcHxwaDZkNrWnJOoOoqnoDrbjYHvEbmfuUVoe6D4crjOA6N7Lqjtakl4hh4P2KmdDBwTOkpISvHA2VmFS90APRwa1uUKQhIWMjFoqZWfRWL1NK5yOI0jlPFpe86OAeqqEaWfLsSB8fcCUd9c20MgcTxlB8tFQy3zmsT4EkbJu2m+5GpQvtyqe0HFiCnQYXQc0gcuap4XIOepOXVDww9LArIvJew4lDia4aZ2q1CRaCcWs3SJUJtUF2JI24YpWgstSihcY32+KpgY5WnqmHJGXgio2OZ/Oq+lWM3ZcvLDf81+xVJ4KaVCukpK8OC6tRRtOXhOK5WzhjX72sdtiUqy5OSOnSNG4XvuH+oAOez6GXdjzfiyJMkh7SKKfuEWVEKZhq7wfZUhJZPbXIFRHMuwxL0ahjrA+qBk5PyJPTTqxTR01DpmKSN/QH3KkALSzqFhLBdenI9Fn8eW3iQxCzEfc/PjnxRblz/+jCC/wHkIdRsYJo7s2nn8DbeZXiyhL3SgGDwZcKHFUfHpADdUqQZCC3cx8sRL8JQIlvAEROShZJv9DiiB0ikAoMlPewx2/aC/Ww5AClI+4qOWjLa1rFTbi5gw0/RlCVz6eDTO+gooNVkTWyvKDgdvMzz3Os4Rb+BWQaZXbK+NG+fGce3nlt5O0sb/28=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: gemini-api-key
+      namespace: prod-eu
+    type: Opaque

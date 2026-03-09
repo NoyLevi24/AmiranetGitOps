@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: gemini-api-key
+  namespace: staging
+spec:
+  encryptedData:
+    GEMINI_API_KEY: AgCR4G/CrvSLqbkAUJ6Q/zN1nQ9AM3o7cKPcdLoT5QLB6/QvMf/TBeDgjqY+4ONqA1tXa1MYYjgvXdftoHXDBTUY26PLlVP/DuGU9hrk6o7FgwC5BzBdAmEuHw3iB3qvWubfG757+mj6lOEvoMjIgYQGdTb7kzRD6xOBSWVwCKWY+Br3EMd2GaNVXwwjq0YggF3FmVhVuHB8DRlda8XOjjgj8zIMdcnjBblHBIwQGZ34PSOE/uZfcpKts7u2tnYZTLlavYGIb4J5qhnLL/n/cI/NvRh5b7FtXr1qX6Iy1wquOfctNApR26B2e1LElMBVkkHNKpa/BmX86OtT74XV0uzeixpYJcdCwFe159B0t+5GcKaTN+dcL4e1gwbxeEVY90PiXhyVEWuMPGN9hpDa2pHdTPXCWsjVnZe3KhvK38x6FH2Uo5ljb9rDs20C3uD04O3hEeDeTAaI9aklxvXGroKU8onexbdXFOqBL9IRRppuGWr2xnaom08B5w1on0xhFC9nX92E4elXaCel9tVgw6+NSBFImjzRm1D1sgQQq6XUq6v72kqviz14jocOV2gNLKD6MpzkYJPEWHJH/ACNFEZuSL+VAfBQrEeGbPgplZgSSavWxXvpqsdmeu59eaG/YGSHvBWAjGVbPMrs5Zx8doQdNWyLXVCtw8hBPI2t47AUD/HSGvE3uX1Fozp/hEnNdrWgcMs7cHe+DIH+uIl23kmVnhxDOmZ/8ACGm6jrDw1R+oN8twcEdtk=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: gemini-api-key
+      namespace: staging
+    type: Opaque
