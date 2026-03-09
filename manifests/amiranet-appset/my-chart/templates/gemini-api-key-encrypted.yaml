@@ -4,7 +4,7 @@ kind: SealedSecret
 metadata:
   creationTimestamp: null
   name: gemini-api-key
-  namespace: amiranet
+  namespace: {{ .Release.Namespace }}
 spec:
   encryptedData:
     GEMINI_API_KEY: AgBJ2Yyb/jEG5jVVmO9bAXNo61WBYyEgKIZuDXTcTVLGuteFYwomLgknXQzDRcbETXgYHsA3TSeAqSFQAfjj54h1GdUXTBZNAnm2JyAkxKBlDVheFMd8qy9KtyhCNSOTgfrllREPa12gHPcCptn92BA/YCcmLfF6fx8sGHnjj95v9xdpj+TupLVBS6JBSoXYGHAR18nAcKUCnl/TmGIg4QuRSOqAAroyfVHS6NKTvgHqNSsudsYfrLSvt4Ycj/eqiBSxK9/OpBHGWnjyb4JLf0a9q1Uv9vJDNDnFHcZaQFplcXoEDyR12QIfuibCMqkZlzr+E68OxupWCK/7L+e3VwcD7ouJ5MEEeX0A9Wft5v7usu6mPeZP+CTPwREvLHmqSnPa2FjFCgjfJeyCq6/0uUgXRLvJXd7S7LI/sLYORewyTEo3VRLLFt4uZJh54sq/aqCI7AK7wC2DKwDt3R7Qz0tGjNSDXZSJRYzqrTTN95iIxB8+YYzEvVJT0ixMs55AJwyZpEQGzLC70WYJgDZJbgYy4rwVXGtEA9Yb5qhctEUWevOn55USXm/2ilpNnf0EIxJSBzeoumAiyyFEO62AtgHKN8cEsUzamEIABnNk/9+hxynilsDWjzBE64No4Tqkkw11s63axvAEXiddzGxc8eUFe2OWAzgJQx8Q/faY1BEYUx5iJmMadMCeYfEkac2pSbExYKBBJZZ+CA/LvMKX74mJ52iOekfD5VKjPOcAZDnLPPeJxTLswwc=
@@ -12,5 +12,5 @@ spec:
     metadata:
       creationTimestamp: null
       name: gemini-api-key
-      namespace: amiranet
+      namespace: {{ .Release.Namespace }}
     type: Opaque
