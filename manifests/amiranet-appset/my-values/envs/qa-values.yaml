@@ -1,0 +1,14 @@
+# Kubernetes settings
+replicaCount: 1
+
+# Environment settings
+environment: qa
+
+# Application settings
+resources:
+    requests:
+        memory: "256Mi"
+        cpu: "250m"
+    limits:
+        memory: "512Mi"
+        cpu: "500m"

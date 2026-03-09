@@ -1,0 +1,12 @@
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: {{ .Release.Name }}-traefik-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  weighted:
+    services:
+      - name: {{ .Release.Name }}-service-stable
+        port: {{ .Values.service.port }}
+      - name: {{ .Release.Name }}-service-canary 
+        port: {{ .Values.service.port }}
