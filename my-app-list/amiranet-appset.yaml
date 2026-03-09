@@ -24,7 +24,6 @@ spec:
       # Source of the application could be in another repository
       sources:
         - repoURL: https://github.com/NoyLevi24/AmiranetGitOps.git
-          chart: amiranet-appset
           targetRevision: HEAD
           path: ./manifests/amiranet-appset/my-chart
           helm:
