@@ -4,13 +4,13 @@ kind: SealedSecret
 metadata:
   creationTimestamp: null
   name: gemini-api-key
-  namespace: {{ .Release.Namespace }}
+  namespace: amiranet
 spec:
   encryptedData:
-    GEMINI_API_KEY: AgBp+v4g+PJUnVrt4BxpStyvhparro5YSC55f+9HYmMLNxHRAFUX1W9lv4GvCp1NOQDYFqq9v7Ku26xZNQ/Adx77+jTjXYtXSAbkCgO8aYQVux5rV2YwZ+4+Etpvo/zQOn/gOcAdUq5eEObvjfHPnaTT2A1iLz3ScxQYvHU6pJ5Ft+WynTCah4NqXWpl+CzjzmQRbQ4VOh05PBbofxfdp+n3rO4hvnglgwytrzVG+w/+DAkcoIYlEz7ZydSjeXdFC76xlQSlEYNN8vWh1xXDCl5IEjspWW0yMCiwZWL/JYkLPAmq0xD0ksnAQhjagNHWCazTTBbvfTpOm9BvZfQs/dHT3oYnDYd5v1PudQb8vgjzJeMQ1Op9TTglRybiczdhIptauOazYMKbDcZ1j6H7NoZYjpvb72hCWzOBdYSGPVusAouKq3CFomwS5KoKoDdwcSIuYcWcF8uR1QAvzf/j0gnb2DdW21LCv0cSs0+uBurTA6dDHKD+jTJYya+uPHwBMghyxw6CgOde0UuOGa6P5NKnovO3naMxWAnooStSZEQtmdsGBWy3WpiAiQRbte9nhimYdzxOd5vSruktU+5+augXhbvY6vslDGEI+NhTdZbTSv+GOHmkFjtijwZN4+Q66HWE49rR7Z+7t12Od1wxBkMsCVBQ+AblQI7BOJX2MXBq3sOLAd3phbN2+LDEWTd31vqJWx/vJDhz8qZThuYDW9A9eSUuCjwlk69lEc2aJ8ndUcGoKMua7NI=
+    GEMINI_API_KEY: AgBJ2Yyb/jEG5jVVmO9bAXNo61WBYyEgKIZuDXTcTVLGuteFYwomLgknXQzDRcbETXgYHsA3TSeAqSFQAfjj54h1GdUXTBZNAnm2JyAkxKBlDVheFMd8qy9KtyhCNSOTgfrllREPa12gHPcCptn92BA/YCcmLfF6fx8sGHnjj95v9xdpj+TupLVBS6JBSoXYGHAR18nAcKUCnl/TmGIg4QuRSOqAAroyfVHS6NKTvgHqNSsudsYfrLSvt4Ycj/eqiBSxK9/OpBHGWnjyb4JLf0a9q1Uv9vJDNDnFHcZaQFplcXoEDyR12QIfuibCMqkZlzr+E68OxupWCK/7L+e3VwcD7ouJ5MEEeX0A9Wft5v7usu6mPeZP+CTPwREvLHmqSnPa2FjFCgjfJeyCq6/0uUgXRLvJXd7S7LI/sLYORewyTEo3VRLLFt4uZJh54sq/aqCI7AK7wC2DKwDt3R7Qz0tGjNSDXZSJRYzqrTTN95iIxB8+YYzEvVJT0ixMs55AJwyZpEQGzLC70WYJgDZJbgYy4rwVXGtEA9Yb5qhctEUWevOn55USXm/2ilpNnf0EIxJSBzeoumAiyyFEO62AtgHKN8cEsUzamEIABnNk/9+hxynilsDWjzBE64No4Tqkkw11s63axvAEXiddzGxc8eUFe2OWAzgJQx8Q/faY1BEYUx5iJmMadMCeYfEkac2pSbExYKBBJZZ+CA/LvMKX74mJ52iOekfD5VKjPOcAZDnLPPeJxTLswwc=
   template:
     metadata:
       creationTimestamp: null
       name: gemini-api-key
-      namespace: {{ .Release.Namespace }}
+      namespace: amiranet
     type: Opaque
