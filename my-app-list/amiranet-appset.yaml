@@ -29,7 +29,9 @@ spec:
           helm:
             valueFiles:
             - $values/manifests/amiranet-appset/my-values/common-values.yaml          
-            - $values/manifests/amiranet-appset/my-values/app-version/{{.version}}-values.yaml               
+            - $values/manifests/amiranet-appset/my-values/app-version/{{.version}}-values.yaml
+            - $values/manifests/amiranet-appset/my-values/replicas/{{.version}}-values.yaml
+            - $values/manifests/amiranet-appset/my-values/settings/{{.version}}-values.yaml              
             - $values/manifests/amiranet-appset/my-values/env-type/{{.type}}-values.yaml  
             - $values/manifests/amiranet-appset/my-values/regions/{{.region}}-values.yaml                
             - $values/manifests/amiranet-appset/my-values/envs/{{.env}}-values.yaml

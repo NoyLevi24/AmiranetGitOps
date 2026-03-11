@@ -1,5 +1,8 @@
-# Kubernetes settings
-replicaCount: 2
-
 # Environment settings
 environmentType: non-prod
+
+# Prometheus settings
+prometheusEnabled: false
+
+# URL settings
+url: "http://localhost:8080"

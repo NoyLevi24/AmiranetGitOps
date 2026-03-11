@@ -1,14 +1,3 @@
-# Kubernetes settings
-replicaCount: 3
-
 # Environment settings
 environment: prod-us
 
-# Application settings
-resources:
-    requests:
-        memory: "512Mi"
-        cpu: "500m"
-    limits:
-        memory: "1Gi"
-        cpu: "1000m"

@@ -1,0 +1,81 @@
+name: Promote application
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_env:
+        description: 'Source environment'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+        - qa
+        - staging
+        - prod
+      target_env:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - qa
+        - staging
+        - prod
+      promote_container:
+        description: 'Promote container tag'
+        required: true
+        type: boolean
+        default: 'true'
+      promote_settings:
+        description: 'Also promote application settings'
+        required: true
+        type: boolean
+        default: 'false'
+      promote_replicas:
+        description: 'Also promote replicas'
+        required: true
+        type: boolean
+        default: 'false'
+      message:
+        description: 'Commit message'
+        required: true
+        type: string
+        default: 'Application promotion'
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Validate environments
+        run: |
+          if [ "${{ inputs.source_env }}" = "${{ inputs.target_env }}" ]; then
+            echo "Error: source and target environments cannot be the same"
+            exit 1
+          fi
+
+      - name: Copy container tag
+        if: ${{ inputs.promote_container }}
+        run: |
+          cp manifests/amiranet-appset/my-values/app-version/${{ inputs.source_env }}-values.yaml \
+             manifests/amiranet-appset/my-values/app-version/${{ inputs.target_env }}-values.yaml
+
+      - name: Copy settings
+        if: ${{ inputs.promote_settings }}
+        run: |
+          cp manifests/amiranet-appset/my-values/settings/${{ inputs.source_env }}-values.yaml \
+             manifests/amiranet-appset/my-values/settings/${{ inputs.target_env }}-values.yaml
+
+      - name: Copy replicas
+        if: ${{ inputs.promote_replicas }}
+        run: |
+          cp manifests/amiranet-appset/my-values/replicas/${{ inputs.source_env }}-values.yaml \
+             manifests/amiranet-appset/my-values/replicas/${{ inputs.target_env }}-values.yaml
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ inputs.message }}
