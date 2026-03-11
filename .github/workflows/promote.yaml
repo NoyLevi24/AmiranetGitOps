@@ -25,17 +25,14 @@ on:
         description: 'Promote container tag'
         required: true
         type: boolean
-        default: 'true'
       promote_settings:
         description: 'Also promote application settings'
         required: true
         type: boolean
-        default: 'false'
       promote_replicas:
         description: 'Also promote replicas'
         required: true
         type: boolean
-        default: 'false'
       message:
         description: 'Commit message'
         required: true
