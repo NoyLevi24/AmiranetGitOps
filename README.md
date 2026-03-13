@@ -23,6 +23,7 @@ This repository is the **single source of truth** for all Kubernetes manifests a
 ---
  
 ## Repository Structure
+### 3-Level App of Apps Pattern
  
 ```
 .
@@ -59,7 +60,7 @@ This repository is the **single source of truth** for all Kubernetes manifests a
  
 ---
  
-## 3-Level App of Apps Pattern
+## Applications Dependencies with Sync Waves
  
 ```
 Root Application  (root-app/)
