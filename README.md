@@ -32,17 +32,8 @@ This repository is the **single source of truth** for all Kubernetes manifests a
 ├── my-app-list/                     # Level 2 — Child Applications
 │   ├── amiranet.yaml                # Amiranet app
 │   ├── rollouts-controller.yaml     # Argo Rollouts controller
-│   └── sealed-controller.yaml      # Sealed Secrets controller
-│
-├── manifests/
-│   ├── amiranet/                    # Level 3 — Workload Manifests
-│   │   ├── rollout.yaml             # Argo Rollout (canary strategy)
-│   │   ├── service.yaml             # Stable + Canary services
-│   │   ├── traefik-service.yaml     # Weighted traffic routing
-│   │   ├── ingress-route.yaml       # Traefik IngressRoute
-│   │   └── gemini-api-key-encrypted.yaml  # Sealed Secret
-│   │
-│   └── amiranet-appset/             # ApplicationSet — multi-environment
+│   ├── sealed-controller.yaml      # Sealed Secrets controller
+|   └── amiranet-appset/             # ApplicationSet — multi-environment
 │       └── my-values/
 │           ├── app-version/
 │           │   ├── qa-values.yaml
@@ -50,6 +41,18 @@ This repository is the **single source of truth** for all Kubernetes manifests a
 │           │   └── prod-values.yaml
 │           ├── settings/
 │           └── replicas/
+│
+├── manifests/                       # Level 3 — Workload Manifests
+|   ├── rollouts-controller.yaml     # Argo Rollouts controller manifests
+│   ├── sealed-controller.yaml       # Sealed Secrets controller manifests
+│   └── amiranet/                    # Amiranet manifests
+│       ├── rollout.yaml             # Argo Rollout (canary strategy)
+│       ├── service.yaml             # Stable + Canary services
+│       ├── traefik-service.yaml     # Weighted traffic routing
+│       ├── ingress-route.yaml       # Traefik IngressRoute
+│       └── gemini-api-key-encrypted.yaml  # Sealed Secret
+│    
+│   
 │
 └── patch-argocd-cm.yaml             # Argo CD config patch
 ```
