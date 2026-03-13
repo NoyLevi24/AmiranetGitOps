@@ -32,7 +32,7 @@ This repository is the **single source of truth** for all Kubernetes manifests a
 ├── my-app-list/                     # Level 2 — Child Applications
 │   ├── amiranet.yaml                # Amiranet app
 │   ├── rollouts-controller.yaml     # Argo Rollouts controller
-│   ├── sealed-controller.yaml      # Sealed Secrets controller
+│   ├── sealed-controller.yaml       # Sealed Secrets controller
 |   └── amiranet-appset/             # ApplicationSet — multi-environment
 │       └── my-values/
 │           ├── app-version/
