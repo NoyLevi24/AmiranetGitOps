@@ -57,6 +57,11 @@ spec:
 
         nodeExporter:
           enabled: true
+          hostRootFsMount:
+            enabled: false
+          hostPathFs:
+            enabled: true
+            mountPath: /host
 
         kubeStateMetrics:
           enabled: true
