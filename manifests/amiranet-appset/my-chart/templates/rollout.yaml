@@ -27,6 +27,8 @@ spec:
             secretKeyRef:
               name: gemini-api-key # שם ה-Secret ב-K8s
               key: GEMINI_API_KEY    # המפתח הספציפי בתוך ה-Secret
+        - name: APP_VERSION                  
+          value: {{ .Values.imageVersion }}  
         livenessProbe:
           httpGet:
             path: /

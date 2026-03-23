@@ -1,0 +1,22 @@
+{{- if .Values.prometheusEnabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-monitor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-app
+    release: prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+{{- end }}

@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: amiranet-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"   # גרפנה מזהה אוטומטית ומטעין את הדשבורד
+data:
+  amiranet-dashboard.json: |
+    {
+      "title": "Amiranet Dashboard",
+      "panels": [
+        {
+          "title": "מבחנים שנוצרו",
+          "type": "stat",
+          "targets": [{
+            "expr": "increase(amiranet_exams_generated_total[1h])"
+          }]
+        },
+        {
+          "title": "שגיאות Gemini API",
+          "type": "stat",
+          "targets": [{
+            "expr": "increase(amiranet_gemini_api_errors_total[1h])"
+          }]
+        },
+        {
+          "title": "זמן יצירת מבחן (ממוצע)",
+          "type": "gauge",
+          "targets": [{
+            "expr": "rate(amiranet_exam_generation_duration_seconds_sum[5m]) / rate(amiranet_exam_generation_duration_seconds_count[5m])"
+          }]
+        },
+        {
+          "title": "CPU תהליך פייתון",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "amiranet_process_cpu_percent"
+          }]
+        },
+        {
+          "title": "Memory תהליך פייתון (MB)",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "amiranet_process_memory_bytes / 1024 / 1024"
+          }]
+        }
+      ]
+    }

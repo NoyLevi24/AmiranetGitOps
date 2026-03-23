@@ -1,0 +1,74 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: "61.7.2"
+    helm:
+      releaseName: prometheus-stack
+      values: |
+        fullnameOverride: prometheus-stack
+
+        grafana:
+          enabled: true
+          adminPassword: "admin"   # שנה ב-production!
+          service:
+            type: ClusterIP
+          ingress:
+            enabled: false
+          persistence:
+            enabled: false
+          defaultDashboardsTimezone: Asia/Jerusalem
+          sidecar:
+            dashboards:
+              enabled: true
+              searchNamespace: ALL
+
+        prometheus:
+          prometheusSpec:
+            # גילוי ServiceMonitors מכל ה-namespaces
+            serviceMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelector: {}
+            serviceMonitorNamespaceSelector: {}
+            # גילוי PodMonitors מכל ה-namespaces
+            podMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelector: {}
+            podMonitorNamespaceSelector: {}
+            retention: 15d
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+
+        alertmanager:
+          enabled: true
+
+        nodeExporter:
+          enabled: true
+
+        kubeStateMetrics:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true    
+    automated:
+      prune: true
+      selfHeal: true

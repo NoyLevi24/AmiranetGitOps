@@ -5,4 +5,4 @@ environmentType: production
 prometheusEnabled: true
 
 # URL settings
-url: "https://api.amiranet.com"
+#url: "https://api.amiranet.com"
