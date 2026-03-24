@@ -4,46 +4,448 @@ metadata:
   name: amiranet-dashboard
   namespace: monitoring
   labels:
-    grafana_dashboard: "1"   # גרפנה מזהה אוטומטית ומטעין את הדשבורד
+    grafana_dashboard: "1"
 data:
   amiranet-dashboard.json: |
     {
       "title": "Amiranet Dashboard",
+      "uid": "amiranet-main",
+      "timezone": "Asia/Jerusalem",
+      "refresh": "30s",
+      "schemaVersion": 38,
+      "tags": ["amiranet"],
+      "time": { "from": "now-6h", "to": "now" },
+      "graphTooltip": 1,
       "panels": [
+
         {
+          "id": 1,
+          "type": "row",
+          "title": "סקירה כללית",
+          "collapsed": false,
+          "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 }
+        },
+
+        {
+          "id": 2,
+          "type": "stat",
           "title": "מבחנים שנוצרו",
-          "type": "stat",
-          "targets": [{
-            "expr": "increase(amiranet_exams_generated_total[1h])"
-          }]
+          "description": "סך מבחנים שנוצרו בהצלחה בטווח הזמן הנבחר",
+          "gridPos": { "x": 0, "y": 1, "w": 6, "h": 4 },
+          "options": {
+            "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
+            "orientation": "auto",
+            "textMode": "auto",
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "center"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "fixed", "fixedColor": "green" },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "increase(amiranet_exams_generated_total[$__range])",
+              "legendFormat": "מבחנים",
+              "refId": "A"
+            }
+          ]
         },
+
         {
-          "title": "שגיאות Gemini API",
+          "id": 3,
           "type": "stat",
-          "targets": [{
-            "expr": "increase(amiranet_gemini_api_errors_total[1h])"
-          }]
+          "title": "שגיאות יצירת מבחן",
+          "description": "מבחנים שנכשלו ביצירה",
+          "gridPos": { "x": 6, "y": 1, "w": 6, "h": 4 },
+          "options": {
+            "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
+            "orientation": "auto",
+            "textMode": "auto",
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "center"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 1 },
+                  { "color": "red", "value": 5 }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "increase(amiranet_exams_failed_total[$__range])",
+              "legendFormat": "שגיאות",
+              "refId": "A"
+            }
+          ]
         },
+
         {
-          "title": "זמן יצירת מבחן (ממוצע)",
+          "id": 4,
+          "type": "stat",
+          "title": "קריאות Gemini API",
+          "description": "סך קריאות ל-Gemini API",
+          "gridPos": { "x": 12, "y": 1, "w": 6, "h": 4 },
+          "options": {
+            "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
+            "orientation": "auto",
+            "textMode": "auto",
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "center"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "fixed", "fixedColor": "blue" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "blue", "value": null }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "increase(amiranet_gemini_api_calls_total[$__range])",
+              "legendFormat": "קריאות",
+              "refId": "A"
+            }
+          ]
+        },
+
+        {
+          "id": 5,
+          "type": "stat",
+          "title": "אחוז הצלחה",
+          "description": "אחוז המבחנים שנוצרו בהצלחה מסך הניסיונות",
+          "gridPos": { "x": 18, "y": 1, "w": 6, "h": 4 },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "orientation": "auto",
+            "textMode": "auto",
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "center"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red",    "value": null },
+                  { "color": "yellow", "value": 70 },
+                  { "color": "green",  "value": 90 }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "100 * (increase(amiranet_exams_generated_total[$__range]) / clamp_min(increase(amiranet_exams_generated_total[$__range]) + increase(amiranet_exams_failed_total[$__range]), 1))",
+              "legendFormat": "הצלחה %",
+              "refId": "A"
+            }
+          ]
+        },
+
+        {
+          "id": 6,
+          "type": "row",
+          "title": "מבחנים",
+          "collapsed": false,
+          "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 }
+        },
+
+        {
+          "id": 7,
+          "type": "timeseries",
+          "title": "קצב יצירת מבחנים לאורך זמן",
+          "description": "כמות מבחנים שנוצרו לדקה",
+          "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
+          "options": {
+            "tooltip": { "mode": "multi", "sort": "none" },
+            "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 15,
+                "gradientMode": "none",
+                "spanNulls": false
+              },
+              "color": { "mode": "palette-classic" }
+            }
+          },
+          "targets": [
+            {
+              "expr": "rate(amiranet_exams_generated_total[5m])",
+              "legendFormat": "מבחנים מוצלחים",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(amiranet_exams_failed_total[5m])",
+              "legendFormat": "מבחנים שנכשלו",
+              "refId": "B"
+            }
+          ]
+        },
+
+        {
+          "id": 8,
+          "type": "timeseries",
+          "title": "זמן יצירת מבחן",
+          "description": "זמן ממוצע, p95 ו-p99 ליצירת מבחן בשניות",
+          "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 },
+          "options": {
+            "tooltip": { "mode": "multi", "sort": "none" },
+            "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
+              },
+              "color": { "mode": "palette-classic" }
+            }
+          },
+          "targets": [
+            {
+              "expr": "rate(amiranet_exam_generation_duration_seconds_sum[5m]) / rate(amiranet_exam_generation_duration_seconds_count[5m])",
+              "legendFormat": "ממוצע",
+              "refId": "A"
+            },
+            {
+              "expr": "histogram_quantile(0.95, rate(amiranet_exam_generation_duration_seconds_bucket[5m]))",
+              "legendFormat": "p95",
+              "refId": "B"
+            },
+            {
+              "expr": "histogram_quantile(0.99, rate(amiranet_exam_generation_duration_seconds_bucket[5m]))",
+              "legendFormat": "p99",
+              "refId": "C"
+            }
+          ]
+        },
+
+        {
+          "id": 9,
           "type": "gauge",
-          "targets": [{
-            "expr": "rate(amiranet_exam_generation_duration_seconds_sum[5m]) / rate(amiranet_exam_generation_duration_seconds_count[5m])"
-          }]
+          "title": "מבחנים פעילים כרגע",
+          "description": "מספר המבחנים שנמצאים בתהליך יצירה כרגע",
+          "gridPos": { "x": 0, "y": 14, "w": 6, "h": 5 },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+            "orientation": "auto",
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "fieldConfig": {
+            "defaults": {
+              "min": 0,
+              "max": 10,
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green",  "value": null },
+                  { "color": "yellow", "value": 3 },
+                  { "color": "red",    "value": 7 }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "amiranet_active_exams",
+              "legendFormat": "פעיל",
+              "refId": "A"
+            }
+          ]
         },
+
         {
+          "id": 10,
+          "type": "row",
+          "title": "Gemini API",
+          "collapsed": false,
+          "gridPos": { "x": 0, "y": 19, "w": 24, "h": 1 }
+        },
+
+        {
+          "id": 11,
+          "type": "timeseries",
+          "title": "קריאות Gemini API לאורך זמן",
+          "description": "קצב קריאות ל-Gemini API לדקה",
+          "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+          "options": {
+            "tooltip": { "mode": "multi", "sort": "none" },
+            "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 15
+              },
+              "color": { "mode": "palette-classic" }
+            }
+          },
+          "targets": [
+            {
+              "expr": "rate(amiranet_gemini_api_calls_total[5m])",
+              "legendFormat": "קריאות",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(amiranet_gemini_api_errors_total[5m])",
+              "legendFormat": "שגיאות",
+              "refId": "B"
+            }
+          ]
+        },
+
+        {
+          "id": 12,
+          "type": "timeseries",
+          "title": "אחוז שגיאות Gemini API",
+          "description": "אחוז הקריאות שנכשלו מסך הקריאות",
+          "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+          "options": {
+            "tooltip": { "mode": "multi", "sort": "none" },
+            "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "min": 0,
+              "max": 100,
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
+              },
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green",  "value": null },
+                  { "color": "yellow", "value": 5 },
+                  { "color": "red",    "value": 20 }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "100 * rate(amiranet_gemini_api_errors_total[5m]) / clamp_min(rate(amiranet_gemini_api_calls_total[5m]), 0.001)",
+              "legendFormat": "אחוז שגיאות",
+              "refId": "A"
+            }
+          ]
+        },
+
+        {
+          "id": 13,
+          "type": "row",
+          "title": "ביצועי תהליך",
+          "collapsed": false,
+          "gridPos": { "x": 0, "y": 28, "w": 24, "h": 1 }
+        },
+
+        {
+          "id": 14,
+          "type": "timeseries",
           "title": "CPU תהליך פייתון",
-          "type": "timeseries",
-          "targets": [{
-            "expr": "amiranet_process_cpu_percent"
-          }]
+          "description": "שימוש ב-CPU של תהליך ה-Flask",
+          "gridPos": { "x": 0, "y": 29, "w": 12, "h": 8 },
+          "options": {
+            "tooltip": { "mode": "single", "sort": "none" },
+            "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "min": 0,
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 20
+              },
+              "color": { "mode": "fixed", "fixedColor": "blue" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green",  "value": null },
+                  { "color": "yellow", "value": 70 },
+                  { "color": "red",    "value": 90 }
+                ]
+              }
+            }
+          },
+          "targets": [
+            {
+              "expr": "amiranet_process_cpu_percent",
+              "legendFormat": "CPU %",
+              "refId": "A"
+            }
+          ]
         },
+
         {
-          "title": "Memory תהליך פייתון (MB)",
+          "id": 15,
           "type": "timeseries",
-          "targets": [{
-            "expr": "amiranet_process_memory_bytes / 1024 / 1024"
-          }]
+          "title": "Memory תהליך פייתון",
+          "description": "שימוש בזיכרון של תהליך ה-Flask",
+          "gridPos": { "x": 12, "y": 29, "w": 12, "h": 8 },
+          "options": {
+            "tooltip": { "mode": "multi", "sort": "none" },
+            "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "decmbytes",
+              "min": 0,
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 20
+              },
+              "color": { "mode": "fixed", "fixedColor": "purple" }
+            }
+          },
+          "targets": [
+            {
+              "expr": "amiranet_process_memory_bytes / 1024 / 1024",
+              "legendFormat": "Memory (MB)",
+              "refId": "A"
+            },
+            {
+              "expr": "amiranet_process_memory_percent",
+              "legendFormat": "Memory %",
+              "refId": "B"
+            }
+          ]
         }
+
       ]
     }
