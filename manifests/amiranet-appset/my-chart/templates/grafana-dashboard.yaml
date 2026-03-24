@@ -43,18 +43,15 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": { "mode": "fixed", "fixedColor": "green" },
-              "mappings": [],
               "thresholds": {
                 "mode": "absolute",
-                "steps": [
-                  { "color": "green", "value": null }
-                ]
+                "steps": [{ "color": "green", "value": null }]
               }
             }
           },
           "targets": [
             {
-              "expr": "increase(amiranet_exams_generated_total[$__range])",
+              "expr": "sum(increase(amiranet_exams_generated_total[$__range]))",
               "legendFormat": "מבחנים",
               "refId": "A"
             }
@@ -81,16 +78,16 @@ data:
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
-                  { "color": "green", "value": null },
+                  { "color": "green",  "value": null },
                   { "color": "yellow", "value": 1 },
-                  { "color": "red", "value": 5 }
+                  { "color": "red",    "value": 5 }
                 ]
               }
             }
           },
           "targets": [
             {
-              "expr": "increase(amiranet_exams_failed_total[$__range])",
+              "expr": "sum(increase(amiranet_exams_failed_total[$__range]))",
               "legendFormat": "שגיאות",
               "refId": "A"
             }
@@ -116,15 +113,13 @@ data:
               "color": { "mode": "fixed", "fixedColor": "blue" },
               "thresholds": {
                 "mode": "absolute",
-                "steps": [
-                  { "color": "blue", "value": null }
-                ]
+                "steps": [{ "color": "blue", "value": null }]
               }
             }
           },
           "targets": [
             {
-              "expr": "increase(amiranet_gemini_api_calls_total[$__range])",
+              "expr": "sum(increase(amiranet_gemini_api_calls_total[$__range]))",
               "legendFormat": "קריאות",
               "refId": "A"
             }
@@ -161,7 +156,7 @@ data:
           },
           "targets": [
             {
-              "expr": "100 * (increase(amiranet_exams_generated_total[$__range]) / clamp_min(increase(amiranet_exams_generated_total[$__range]) + increase(amiranet_exams_failed_total[$__range]), 1))",
+              "expr": "100 * sum(increase(amiranet_exams_generated_total[$__range])) / clamp_min(sum(increase(amiranet_exams_generated_total[$__range])) + sum(increase(amiranet_exams_failed_total[$__range])), 1)",
               "legendFormat": "הצלחה %",
               "refId": "A"
             }
@@ -188,23 +183,18 @@ data:
           },
           "fieldConfig": {
             "defaults": {
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 15,
-                "gradientMode": "none",
-                "spanNulls": false
-              },
+              "custom": { "lineWidth": 2, "fillOpacity": 15, "gradientMode": "none", "spanNulls": false },
               "color": { "mode": "palette-classic" }
             }
           },
           "targets": [
             {
-              "expr": "rate(amiranet_exams_generated_total[5m])",
+              "expr": "sum(rate(amiranet_exams_generated_total[5m]))",
               "legendFormat": "מבחנים מוצלחים",
               "refId": "A"
             },
             {
-              "expr": "rate(amiranet_exams_failed_total[5m])",
+              "expr": "sum(rate(amiranet_exams_failed_total[5m]))",
               "legendFormat": "מבחנים שנכשלו",
               "refId": "B"
             }
@@ -224,26 +214,23 @@ data:
           "fieldConfig": {
             "defaults": {
               "unit": "s",
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 10
-              },
+              "custom": { "lineWidth": 2, "fillOpacity": 10 },
               "color": { "mode": "palette-classic" }
             }
           },
           "targets": [
             {
-              "expr": "rate(amiranet_exam_generation_duration_seconds_sum[5m]) / rate(amiranet_exam_generation_duration_seconds_count[5m])",
+              "expr": "sum(rate(amiranet_exam_generation_duration_seconds_sum[5m])) / sum(rate(amiranet_exam_generation_duration_seconds_count[5m]))",
               "legendFormat": "ממוצע",
               "refId": "A"
             },
             {
-              "expr": "histogram_quantile(0.95, rate(amiranet_exam_generation_duration_seconds_bucket[5m]))",
+              "expr": "histogram_quantile(0.95, sum by(le) (rate(amiranet_exam_generation_duration_seconds_bucket[5m])))",
               "legendFormat": "p95",
               "refId": "B"
             },
             {
-              "expr": "histogram_quantile(0.99, rate(amiranet_exam_generation_duration_seconds_bucket[5m]))",
+              "expr": "histogram_quantile(0.99, sum by(le) (rate(amiranet_exam_generation_duration_seconds_bucket[5m])))",
               "legendFormat": "p99",
               "refId": "C"
             }
@@ -279,7 +266,7 @@ data:
           },
           "targets": [
             {
-              "expr": "amiranet_active_exams",
+              "expr": "sum(amiranet_active_exams)",
               "legendFormat": "פעיל",
               "refId": "A"
             }
@@ -306,21 +293,18 @@ data:
           },
           "fieldConfig": {
             "defaults": {
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 15
-              },
+              "custom": { "lineWidth": 2, "fillOpacity": 15 },
               "color": { "mode": "palette-classic" }
             }
           },
           "targets": [
             {
-              "expr": "rate(amiranet_gemini_api_calls_total[5m])",
+              "expr": "sum(rate(amiranet_gemini_api_calls_total[5m]))",
               "legendFormat": "קריאות",
               "refId": "A"
             },
             {
-              "expr": "rate(amiranet_gemini_api_errors_total[5m])",
+              "expr": "sum(rate(amiranet_gemini_api_errors_total[5m]))",
               "legendFormat": "שגיאות",
               "refId": "B"
             }
@@ -342,10 +326,7 @@ data:
               "unit": "percent",
               "min": 0,
               "max": 100,
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 10
-              },
+              "custom": { "lineWidth": 2, "fillOpacity": 10 },
               "color": { "mode": "thresholds" },
               "thresholds": {
                 "mode": "absolute",
@@ -359,7 +340,7 @@ data:
           },
           "targets": [
             {
-              "expr": "100 * rate(amiranet_gemini_api_errors_total[5m]) / clamp_min(rate(amiranet_gemini_api_calls_total[5m]), 0.001)",
+              "expr": "100 * sum(rate(amiranet_gemini_api_errors_total[5m])) / clamp_min(sum(rate(amiranet_gemini_api_calls_total[5m])), 0.001)",
               "legendFormat": "אחוז שגיאות",
               "refId": "A"
             }
@@ -388,10 +369,7 @@ data:
             "defaults": {
               "unit": "percent",
               "min": 0,
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 20
-              },
+              "custom": { "lineWidth": 2, "fillOpacity": 20 },
               "color": { "mode": "fixed", "fixedColor": "blue" },
               "thresholds": {
                 "mode": "absolute",
@@ -405,7 +383,7 @@ data:
           },
           "targets": [
             {
-              "expr": "amiranet_process_cpu_percent",
+              "expr": "sum(amiranet_process_cpu_percent)",
               "legendFormat": "CPU %",
               "refId": "A"
             }
@@ -426,21 +404,18 @@ data:
             "defaults": {
               "unit": "decmbytes",
               "min": 0,
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 20
-              },
+              "custom": { "lineWidth": 2, "fillOpacity": 20 },
               "color": { "mode": "fixed", "fixedColor": "purple" }
             }
           },
           "targets": [
             {
-              "expr": "amiranet_process_memory_bytes / 1024 / 1024",
+              "expr": "sum(amiranet_process_memory_bytes) / 1024 / 1024",
               "legendFormat": "Memory (MB)",
               "refId": "A"
             },
             {
-              "expr": "amiranet_process_memory_percent",
+              "expr": "sum(amiranet_process_memory_percent)",
               "legendFormat": "Memory %",
               "refId": "B"
             }
