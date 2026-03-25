@@ -30,10 +30,10 @@ data:
           "id": 2,
           "type": "stat",
           "title": "מבחנים שנוצרו",
-          "description": "סך מבחנים שנוצרו בהצלחה בטווח הזמן הנבחר",
+          "description": "סך מבחנים שנוצרו בהצלחה מאז עליית האפליקציה",
           "gridPos": { "x": 0, "y": 1, "w": 6, "h": 4 },
           "options": {
-            "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
             "orientation": "auto",
             "textMode": "auto",
             "colorMode": "background",
@@ -51,7 +51,7 @@ data:
           },
           "targets": [
             {
-              "expr": "sum(increase(amiranet_exams_generated_total[$__range]))",
+              "expr": "sum(amiranet_exams_generated_total)",
               "legendFormat": "מבחנים",
               "refId": "A"
             }
@@ -62,10 +62,10 @@ data:
           "id": 3,
           "type": "stat",
           "title": "שגיאות יצירת מבחן",
-          "description": "מבחנים שנכשלו ביצירה",
+          "description": "סך מבחנים שנכשלו מאז עליית האפליקציה",
           "gridPos": { "x": 6, "y": 1, "w": 6, "h": 4 },
           "options": {
-            "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
             "orientation": "auto",
             "textMode": "auto",
             "colorMode": "background",
@@ -87,7 +87,7 @@ data:
           },
           "targets": [
             {
-              "expr": "sum(increase(amiranet_exams_failed_total[$__range]))",
+              "expr": "sum(amiranet_exams_failed_total)",
               "legendFormat": "שגיאות",
               "refId": "A"
             }
@@ -98,10 +98,10 @@ data:
           "id": 4,
           "type": "stat",
           "title": "קריאות Gemini API",
-          "description": "סך קריאות ל-Gemini API",
+          "description": "סך קריאות ל-Gemini API מאז עליית האפליקציה",
           "gridPos": { "x": 12, "y": 1, "w": 6, "h": 4 },
           "options": {
-            "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
             "orientation": "auto",
             "textMode": "auto",
             "colorMode": "background",
@@ -119,7 +119,7 @@ data:
           },
           "targets": [
             {
-              "expr": "sum(increase(amiranet_gemini_api_calls_total[$__range]))",
+              "expr": "sum(amiranet_gemini_api_calls_total)",
               "legendFormat": "קריאות",
               "refId": "A"
             }
@@ -156,7 +156,7 @@ data:
           },
           "targets": [
             {
-              "expr": "100 * sum(increase(amiranet_exams_generated_total[$__range])) / clamp_min(sum(increase(amiranet_exams_generated_total[$__range])) + sum(increase(amiranet_exams_failed_total[$__range])), 1)",
+              "expr": "100 * sum(amiranet_exams_generated_total) / clamp_min(sum(amiranet_exams_generated_total) + sum(amiranet_exams_failed_total), 1)",
               "legendFormat": "הצלחה %",
               "refId": "A"
             }
@@ -175,7 +175,7 @@ data:
           "id": 7,
           "type": "timeseries",
           "title": "קצב יצירת מבחנים לאורך זמן",
-          "description": "כמות מבחנים שנוצרו לדקה",
+          "description": "כמות מבחנים שנוצרו לדקה — rate מציג שינויים בזמן אמת",
           "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
           "options": {
             "tooltip": { "mode": "multi", "sort": "none" },
