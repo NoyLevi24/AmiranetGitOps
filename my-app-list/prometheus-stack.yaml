@@ -12,30 +12,32 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: "82.15.1"
+    targetRevision: "82.15.1" 
     helm:
       releaseName: prometheus-stack
       values: |
         fullnameOverride: prometheus-stack
 
-        ## Grafana Configuration
+        ## Grafana
         grafana:
-          adminPassword: "admin" # מומלץ להחליף ל-Secret ב-Production
-          defaultDashboardsTimezone: Asia/Jerusalem
+          enabled: true
+          adminPassword: "admin"
           sidecar:
             dashboards:
               enabled: true
               searchNamespace: ALL
+              label: grafana_dashboard
+              labelValue: "1"
 
-        ## Prometheus Instance & Discovery
+        ## Prometheus Instance 
         prometheus:
           prometheusSpec:
-            # הגדרה קריטית לגילוי אוטומטי של ServiceMonitors בפרויקטים שלך
             serviceMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelector: {}
             podMonitorSelectorNilUsesHelmValues: false
             podMonitorSelector: {}
             
+            # ניהול משאבים (Resources)
             retention: 15d
             resources:
               requests:
@@ -43,21 +45,17 @@ spec:
                 memory: 512Mi
               limits:
                 cpu: 1
-                memory: 2Gi
-        
-        nodeExporter:
-          hostRootfs: true
-          extraArgs:
-            - --path.rootfs=/host
-          extraMounts:
-            - name: root
-              mountPath: /host
-              readOnly: true
-              mountPropagation: HostToContainer
+                memory: 2Gi 
 
         ## Alertmanager
         alertmanager:
-          apiVersion: v2
+          enabled: true         
+
+        ## Exporters
+        nodeExporter:
+          enabled: false
+        kubeStateMetrics:
+          enabled: true
 
   destination:
     server: https://kubernetes.default.svc
@@ -66,7 +64,8 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true # חובה בגרסאות 80+ עבור ה-CRDs
+      - ServerSideApply=true 
+      - Replace=true         
     automated:
       prune: true
       selfHeal: true
