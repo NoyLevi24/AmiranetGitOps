@@ -12,54 +12,42 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: "61.7.2"
+    targetRevision: "82.15.1"
     helm:
       releaseName: prometheus-stack
       values: |
         fullnameOverride: prometheus-stack
 
+        ## Grafana Configuration
         grafana:
-          enabled: true
-          adminPassword: "admin"   # שנה ב-production!
-          service:
-            type: ClusterIP
-          ingress:
-            enabled: false
-          persistence:
-            enabled: false
+          adminPassword: "admin" # מומלץ להחליף ל-Secret ב-Production
           defaultDashboardsTimezone: Asia/Jerusalem
           sidecar:
             dashboards:
               enabled: true
               searchNamespace: ALL
 
+        ## Prometheus Instance & Discovery
         prometheus:
           prometheusSpec:
-            # גילוי ServiceMonitors מכל ה-namespaces
+            # הגדרה קריטית לגילוי אוטומטי של ServiceMonitors בפרויקטים שלך
             serviceMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelector: {}
-            serviceMonitorNamespaceSelector: {}
-            # גילוי PodMonitors מכל ה-namespaces
             podMonitorSelectorNilUsesHelmValues: false
             podMonitorSelector: {}
-            podMonitorNamespaceSelector: {}
+            
             retention: 15d
             resources:
               requests:
-                cpu: 200m
+                cpu: 250m
                 memory: 512Mi
               limits:
-                cpu: 500m
-                memory: 1Gi
+                cpu: 1
+                memory: 2Gi
 
+        ## Alertmanager
         alertmanager:
-          enabled: true
-
-        nodeExporter:
-          enabled: false
-
-        kubeStateMetrics:
-          enabled: true
+          apiVersion: v2
 
   destination:
     server: https://kubernetes.default.svc
@@ -68,7 +56,7 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true    
+      - ServerSideApply=true # חובה בגרסאות 80+ עבור ה-CRDs
     automated:
       prune: true
       selfHeal: true
