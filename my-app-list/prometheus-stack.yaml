@@ -12,12 +12,10 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: "82.15.1" 
+    targetRevision: "*"
     helm:
       releaseName: prometheus-stack
       values: |
-        fullnameOverride: prometheus-stack
-
         ## Grafana
         grafana:
           enabled: true
@@ -29,34 +27,6 @@ spec:
               label: grafana_dashboard
               labelValue: "1"
 
-        ## Prometheus Instance 
-        prometheus:
-          prometheusSpec:
-            serviceMonitorSelectorNilUsesHelmValues: false
-            serviceMonitorSelector: {}
-            podMonitorSelectorNilUsesHelmValues: false
-            podMonitorSelector: {}
-            
-            # ניהול משאבים (Resources)
-            retention: 15d
-            resources:
-              requests:
-                cpu: 250m
-                memory: 512Mi
-              limits:
-                cpu: 1
-                memory: 2Gi 
-
-        ## Alertmanager
-        alertmanager:
-          enabled: true         
-
-        ## Exporters
-        nodeExporter:
-          enabled: false
-        kubeStateMetrics:
-          enabled: true
-
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -64,8 +34,7 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true 
-      - Replace=true         
+      - ServerSideApply=true
     automated:
       prune: true
       selfHeal: true
