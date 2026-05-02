@@ -13,28 +13,32 @@ This repository is the **single source of truth** for all Kubernetes manifests a
 
 ```mermaid
 flowchart TB
-    classDef devStyle    fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,color:#1e1b4b,font-weight:bold
-    classDef ciStyle     fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12,font-weight:bold
-    classDef tfStyle     fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d,font-weight:bold
-    classDef argoStyle   fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#581c87,font-weight:bold
-    classDef appStyle    fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a,font-weight:bold
-    classDef obsStyle    fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12,font-weight:bold
-    classDef envStyle    fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#831843,font-weight:bold
-    classDef secretStyle fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d,font-weight:bold
+    %% Definitions of styles for the different nodes
+    classDef devStyle     fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,color:#1e1b4b,font-weight:bold
+    classDef ciStyle      fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12,font-weight:bold
+    classDef tfStyle      fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d,font-weight:bold
+    classDef argoStyle    fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#581c87,font-weight:bold
+    classDef appStyle     fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a,font-weight:bold
+    classDef obsStyle     fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12,font-weight:bold
+    classDef envStyle     fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#831843,font-weight:bold
+    classDef secretStyle  fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d,font-weight:bold
 
+    %% Developer subgraph
     subgraph DEV["  🧑‍💻  Developer"]
         CODE["📦 AmiranetCode\nFlask · Gemini API"]
         GITOPS_REPO["📁 AmiranetGitOps\nHelm · Manifests"]
     end
     style DEV fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#312e81
 
+    %% CI/CD subgraph
     subgraph CI["  ⚙️  GitHub Actions"]
         BUILD["🐳 Build & push image\ndocker.io/noylevi/amiranet"]
         UPDATE["✏️ Update qa-values.yaml\nnew imageVersion tag"]
     end
     style CI fill:#fff7ed,stroke:#f97316,stroke-width:2px,color:#7c2d12
 
-    subgraph AWS["  ☁️  AWS — "us-east-1""]
+    %% AWS Infrastructure subgraph
+    subgraph AWS["  ☁️  AWS — \"us-east-1\""]
         subgraph TF["Terraform"]
             VPC["🌐 VPC\npublic + private subnets\nNAT Gateway"]
             EKS["⎈ EKS Cluster\nManaged node group\nt3a.medium × 2"]
@@ -43,16 +47,25 @@ flowchart TB
     end
     style AWS fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d
 
+    %% Kubernetes Cluster subgraph
     subgraph K8S["  ⎈  Kubernetes"]
-        subgraph WAVES["Sync Waves"]
+        
+        %% Root App is external to the waves, it bootstraps everything
+        ROOT_APP["🚀 Argo CD Root App\n(Manual Bootstrap)"]
+
+        subgraph WAVES["Sync Waves (Infrastructure)"]
             W1["🔐 Sealed Secrets\nwave 1"]
             W2["🔄 Argo Rollouts\nwave 2"]
-            W3["🚀 Argo CD root app\nwave 3"]
-            W4["📋 ApplicationSet\nwave 4"]
+            W3["📊 Prometheus Stack\nwave 3"]
         end
         style WAVES fill:#f3e8ff,stroke:#a855f7,stroke-width:1.5px,color:#581c87
 
-        subgraph ENVS["Environments"]
+        subgraph APP_SET["Application Management"]
+            W4["📋 ApplicationSet\nwave 4"]
+        end
+        style APP_SET fill:#fdf4ff,stroke:#d946ef,stroke-width:1.5px,color:#701a75
+
+        subgraph ENVS["Environments (Workloads)"]
             QA["🟡 qa\neu · 1 replica"]
             STAGING["🟠 staging\nus · 2 replicas"]
             PROD_EU["🔴 prod-eu\neu · 3 replicas"]
@@ -69,48 +82,66 @@ flowchart TB
         end
         style APP fill:#dbeafe,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a
 
-        subgraph OBS["Observability"]
-            PROM["📊 Prometheus\nServiceMonitor"]
+        subgraph OBS["Application Observability"]
+            PROM_SM["📊 Prometheus\nServiceMonitor"]
             GRAFANA["📈 Grafana\nAmiranet dashboard"]
         end
         style OBS fill:#fef9c3,stroke:#eab308,stroke-width:1.5px,color:#713f12
     end
     style K8S fill:#faf5ff,stroke:#9333ea,stroke-width:2px,color:#581c87
 
-    %% Developer flow
+    %% --- Edges defining the flow ---
+
+    %% Developer and CI flow
     CODE -->|"workflow_dispatch"| BUILD
     BUILD --> UPDATE
     UPDATE -->|"git push"| GITOPS_REPO
 
-    %% Terraform
+    %% Terraform flow
     GITOPS_REPO -->|"terraform apply"| VPC
     VPC --> EKS
 
-    %% GitOps bootstrap
-    GITOPS_REPO -->|"kubectl apply"| W3
-    W3 --> W4
-    W1 -.->|"wave order"| W2 -.->|"wave order"| W3
+    %% GitOps bootstrap flow
+    GITOPS_REPO -->|"kubectl apply"| ROOT_APP
+    
+    %% Root App installs the infrastructure and appset
+    ROOT_APP --> W1
+    ROOT_APP --> W2
+    ROOT_APP --> W3
+    ROOT_APP --> W4
 
-    %% ApplicationSet → envs
-    W4 --> QA & STAGING & PROD_EU & PROD_US
+    %% Dependencies between waves
+    W1 -.->|"defines secret for"| W4
+    W2 -.->|"defines deployment for"| W4
+    W3 -.->|"scrapes"| PROM_SM
 
-    %% App stack
+    %% ApplicationSet generates apps for environments
+    W4 -->|"generates"| QA
+    W4 -->|"generates"| STAGING
+    W4 -->|"generates"| PROD_EU
+    W4 -->|"generates"| PROD_US
+
+    %% Application stack internal flow
     QA --> ROLLOUT
-    ROLLOUT --> SVCS --> TRAEFIK --> INGRESS
-    SECRET -.->|"env var"| ROLLOUT
+    ROLLOUT --> SVCS
+    SVCS --> TRAEFIK
+    TRAEFIK --> INGRESS
+    SECRET -.->|"provides env var to"| ROLLOUT
 
-    %% Observability
-    ROLLOUT --> PROM --> GRAFANA
+    %% Observability flow
+    ROLLOUT -->|"exposed to"| PROM_SM
+    PROM_SM --> GRAFANA
 
-    %% Apply styles
+    %% --- Apply styles to nodes ---
     class CODE,GITOPS_REPO devStyle
     class BUILD,UPDATE ciStyle
     class VPC,EKS tfStyle
-    class W1,W2,W3,W4 argoStyle
+    class ROOT_APP,W1,W2,W3 argoStyle
+    class W4 argoStyle
     class QA,STAGING,PROD_EU,PROD_US envStyle
     class ROLLOUT,SVCS,TRAEFIK,INGRESS appStyle
     class SECRET secretStyle
-    class PROM,GRAFANA obsStyle
+    class PROM_SM,GRAFANA obsStyle
 ```
 
 ---
@@ -182,13 +213,14 @@ flowchart TB
 ## Applications Dependencies with Sync Waves
  
 ```
-Root Application  (root-app/)
+Root Application (root-app/)
         │
-        ├── sealed-controller      wave 1
-        ├── rollouts-controller    wave 2
-        └── amiranet               wave 3
+        ├── 🔐 sealed-controller      wave 1
+        ├── 🔄 rollouts-controller    wave 2
+        ├── 📊 prometheus-stack       wave 3
+        └── 📋 amiranet-appset        wave 4
                 │
-                └── Rollout + Services + Ingress + Secrets
+                └── Rollout + Services + Ingress + Secrets (per env)
 ```
  
 Sync waves ensure dependencies are deployed in the correct order — the Sealed Secrets controller is ready before secrets are applied, and Argo Rollouts is ready before the Rollout resource is created.
