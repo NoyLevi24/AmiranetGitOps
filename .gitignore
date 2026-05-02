@@ -1,1 +1,19 @@
 never-commit-to-git/
+
+### Terraform ###
+# Local .terraform directories and files
+.terraform/
+.terraform.lock.hcl
+
+# Terraform state files 
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Plan output files
+*.tfplan
+*.plan
+
+# Variable files (may contain sensitive data)
+*.tfvars
+*.tfvars.json
